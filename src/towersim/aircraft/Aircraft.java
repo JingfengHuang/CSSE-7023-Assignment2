@@ -194,7 +194,7 @@ public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencySta
      * the aircraft's current task.
      * <p>
      * If the aircraft is currently in a state of emergency, the format of the string to return is
-     * <pre>aicraftType callsign model currentTask (EMERGENCY)</pre>
+     * <pre>aircraftType callsign model currentTask (EMERGENCY)</pre>
      * For example, {@code "AIRPLANE ABC123 AIRBUS_A320 LOAD (EMERGENCY)"}.
      *
      * @return string representation of this aircraft
@@ -235,5 +235,103 @@ public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencySta
     @Override
     public boolean hasEmergency() {
         return emergency;
+    }
+
+    //Start of assignment 2
+    /**
+     * Unloads the aircraft of all cargo (passengers/freight) it is currently carrying.
+     *
+     * This action should be performed instantly. After calling unload(),
+     * OccupancyLevel.calculateOccupancyLevel() should return 0 to indicate that the aircraft is empty.
+     */
+    public abstract void unload();
+
+    /**
+     * Returns true if and only if this aircraft is equal to the other given aircraft.
+     *
+     * For two aircraft to be equal, they must:
+     * have the same callsign and
+     * have the same characteristics (AircraftCharacteristics)
+     *
+     * @param obj - other object to check equality
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Aircraft)) {
+            return false;
+        }
+
+        Aircraft objAircraft = (Aircraft) obj;
+        return this.callsign.equals(objAircraft.getCallsign())
+                && this.characteristics.equals(objAircraft.getCharacteristics());
+    }
+
+    /**
+     * Returns the hash code of this aircraft.
+     *
+     * Two aircraft that are equal according to equals(Object) should have the same hash code.
+     *
+     * @return hash code of this aircraft
+     */
+    @Override
+    public int hashCode() {
+        //pick a prime number to be the initial hashcode
+        int hashCode = 17;
+
+        /*Two aircraft are equal if and only if they have the same callsign
+         and they have the same characteristics, so if their callsign and characteristics
+         are equal, they should have same hashcode. In order to make the calculated
+         hashcode to be unique, prime number 31 was picked to multiply the origin hashcode.
+         */
+        hashCode = hashCode * 31 + this.callsign.hashCode();
+        hashCode = hashCode * 31 + this.getCharacteristics().hashCode();
+
+        return hashCode;
+    }
+
+    /**
+     * Returns the machine-readable string representation of this aircraft.
+     *
+     * The format of the string to return is:
+     * callsign:model:taskListEncoded:fuelAmount:emergency
+     * where callsign is the aircraft's callsign
+     * model is the Enum.name() of the aircraft's AircraftCharacteristics
+     * taskListEncoded is the encode() representation of the aircraft's task list
+     * fuelAmount is the aircraft's current amount of fuel onboard, formatted to exactly two (2) decimal places
+     * emergency is whether or not the aircraft is currently in a state of emergency
+     *
+     * @return encoded string representation of this aircraft
+     */
+    public String encode() {
+        String spacer = ":";
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.callsign);
+        sb.append(spacer);
+        sb.append(this.getCharacteristics().name());
+        sb.append(spacer);
+        sb.append(this.getTaskList().encode());
+        sb.append(spacer);
+
+        /* Multiply  the current amount of fuel onboard by 100, and cast it to integer.
+        Thus number after 2 decimal places of the original double will disappear.
+        Then this integer is divided by 100, and restore the initial 2 decimal numbers.
+         */
+        double fuelAmount = ((int) (this.getFuelAmount() * 100)) / 100;
+
+        sb.append(fuelAmount);
+        sb.append(spacer);
+
+        if (this.hasEmergency()) {
+            sb.append("true");
+        } else {
+            sb.append("false");
+        }
+
+        return sb.toString();
     }
 }
