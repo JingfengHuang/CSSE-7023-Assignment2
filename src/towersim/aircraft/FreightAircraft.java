@@ -164,4 +164,37 @@ public class FreightAircraft extends Aircraft {
                     this.getCharacteristics().freightCapacity);
         }
     }
+
+    //Start of assignment 2
+    /**
+     * Unloads the aircraft of all cargo (passengers/freight) it is currently carrying.
+     *
+     * This action should be performed instantly.
+     * After calling unload(), OccupancyLevel.calculateOccupancyLevel()
+     * should return 0 to indicate that the aircraft is empty.
+     */
+    public void unload() {
+        this.freightAmount = 0;
+    }
+
+    /**
+     * Returns the machine-readable string representation of this freight aircraft.
+     *
+     * The format of the string to return is:
+     * callsign:model:taskListEncoded:fuelAmount:emergency:freightAmount
+     *
+     * where callsign is the aircraft's callsign,
+     * model is the Enum.name() of the aircraft's AircraftCharacteristics,
+     * taskListEncoded is the encode() representation of the aircraft's task list
+     * fuelAmount is the aircraft's current amount of fuel onboard,
+     * formatted to exactly two (2) decimal places
+     * emergency is whether or not the aircraft is currently in a state of emergency
+     * freightAmount is the amount of freight currently onboard
+     *
+     * @return encoded string representation of this aircraft
+     */
+    @Override
+    public String encode() {
+        return super.encode() + ":" + this.freightAmount;
+    }
 }
