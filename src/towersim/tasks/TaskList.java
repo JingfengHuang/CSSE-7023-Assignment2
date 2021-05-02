@@ -19,11 +19,18 @@ public class TaskList {
      * task in the given list.
      *
      * @param tasks list of tasks
+     * @throws IllegalArgumentException - if the given list of tasks is invalid
      * @ass1
      */
     public TaskList(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
         this.tasks = tasks;
         this.currentTaskIndex = 0;
+
+        //Not completed
     }
 
     /**
@@ -90,5 +97,31 @@ public class TaskList {
                 this.getCurrentTask(),
                 this.currentTaskIndex + 1,
                 this.tasks.size());
+    }
+
+    /**
+     * Returns the machine-readable string representation of this task list.
+     *
+     * The format of the string to return is:
+     * encodedTask1,encodedTask2,...,encodedTaskN
+     *
+     * where encodedTaskX is the encoded representation of the Xth task in the task list,
+     * for X between 1 and N inclusive, where N is the number of tasks in the task list
+     * and encodedTask1 represents the current task.
+     *
+     * @return encoded string representation of this task list
+     */
+    public String encode() {
+        String spacer = ",";
+        StringBuilder sb = new StringBuilder();
+        
+        for(Task task : this.tasks) {
+            sb.append(task.encode());
+            sb.append(spacer);
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
+
+        return sb.toString();
     }
 }
