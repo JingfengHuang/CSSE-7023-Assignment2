@@ -141,15 +141,15 @@ public class Task implements Encodable {
     @Override
     public int hashCode() {
         //pick a prime number to be the initial hashcode
-        int hashCode = 17;
+        int hashCode = 83;
 
         /*Since if two tasks are equal, they should have the same hashcode,
         then hashCode should be calculated based on their task type and their load percentage.
         In order to make the calculated hashcode to be unique,
-        prime number 31 was picked to multiply the origin hashcode.
+        prime number 61 was picked to multiply the origin hashcode.
          */
-        hashCode = 31 * hashCode + this.getType().name().hashCode();
-        hashCode = 31 * hashCode + this.getLoadPercent();
+        hashCode = 61 * hashCode + this.getType().name().hashCode();
+        hashCode = 61 * hashCode + this.getLoadPercent();
 
         return hashCode;
     }

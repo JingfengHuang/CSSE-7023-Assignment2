@@ -1,13 +1,14 @@
 package towersim.ground;
 
 import towersim.aircraft.Aircraft;
+import towersim.util.Encodable;
 import towersim.util.NoSpaceException;
 
 /**
  * Represents an aircraft gate with facilities for a single aircraft to be parked.
  * @ass1
  */
-public class Gate {
+public class Gate implements Encodable {
 
     /** Unique (airport-wide) gate number. */
     private final int gateNumber;
@@ -106,5 +107,66 @@ public class Gate {
         return String.format("Gate %d [%s]",
                 this.gateNumber,
                 (aircraftAtGate == null ? "empty" : aircraftAtGate.getCallsign()));
+    }
+
+    /**
+     * Returns true if and only if this gate is equal to the other given gate.
+     *
+     * For two gates to be equal, they must have the same gate number.
+     *
+     * @param obj - other object to check equality
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Gate)) {
+            return false;
+        }
+
+        Gate objGate = (Gate) obj;
+        return this.getGateNumber() == objGate.getGateNumber();
+    }
+
+    /**
+     * Returns the hash code of this gate.
+     *
+     * Two gates that are equal according to equals(Object) should have the same hash code.
+     *
+     * @return hash code of this gate
+     */
+    @Override
+    public int hashCode() {
+        //pick a prime number to be the initial hashcode
+        int hashCode = 97;
+
+        /* Since if two gates are equal, they should have same hash code,
+        so the hash code is determined by gate number. In order to make the calculated
+        hashcode to be unique, prime number 37 was picked to multiply the origin hashcode.
+         */
+        hashCode = hashCode * 37 + this.getGateNumber();
+
+        return hashCode;
+    }
+
+    /**
+     * Returns the machine-readable string representation of this gate.
+     *
+     * The format of the string to return is: gateNumber:callsign
+     * where gateNumber is the gate number of this gate
+     * callsign is the callsign of the aircraft parked at this gate, or empty if the gate is unoccupied
+     *
+     * @return encoded string representation of this gate
+     */
+    @Override
+    public String encode() {
+        if (this.isOccupied()) {
+            return "" + this.getGateNumber() + ":" + this.getAircraftAtGate().getCallsign();
+        } else {
+            return "" + this.getGateNumber() + ":empty";
+        }
     }
 }
