@@ -1,9 +1,6 @@
 package towersim.ground;
 
-import towersim.util.EmergencyState;
-import towersim.util.NoSpaceException;
-import towersim.util.NoSuitableGateException;
-import towersim.util.OccupancyLevel;
+import towersim.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +9,7 @@ import java.util.List;
  * Represents an airport terminal building, containing several aircraft gates.
  * @ass1
  */
-public abstract class Terminal implements EmergencyState, OccupancyLevel {
+public abstract class Terminal implements EmergencyState, OccupancyLevel, Encodable {
     /**
      * Maximum possible number of gates allowed at a single terminal.
      * @ass1
@@ -185,5 +182,106 @@ public abstract class Terminal implements EmergencyState, OccupancyLevel {
                 this.terminalNumber,
                 this.gates.size(),
                 this.emergency ? " (EMERGENCY)" : "");
+    }
+
+    /**
+     * Returns true if and only if this terminal is equal to the other given terminal.
+     *
+     * For two terminals to be equal, they must:
+     * be the same type (i.e. the same concrete subclass of Terminal) and
+     * have the same terminal number
+     *
+     * @param obj - other object to check equality
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Terminal)) {
+            return false;
+        }
+
+        Terminal objTerminal = (Terminal) obj;
+        if (!(this.getTerminalNumber() == objTerminal.getTerminalNumber())) {
+            return false;
+        }
+
+        if (this instanceof AirplaneTerminal && objTerminal instanceof AirplaneTerminal) {
+            return true;
+        } else if (this instanceof HelicopterTerminal && objTerminal instanceof HelicopterTerminal) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns the hash code of this terminal.
+     *
+     * Two terminals that are equal according to equals(Object) should have the same hash code.
+     *
+     * @return hash code of this terminal
+     */
+    @Override
+    public int hashCode() {
+        //pick a prime number to be the initial hashcode
+        int hashCode = 103;
+
+        /* Because of if two terminals are equal according to equals(Object), they
+        should have same hash code, then the terminal hash code should be determined
+        by their type and terminal number. In order to make the calculated hashcode
+        to be unique, prime number 109 was picked to multiply the origin hashcode.
+         */
+        hashCode = hashCode * 109 + this.getClass().getSimpleName().hashCode();
+        hashCode = hashCode * 109 + this.getTerminalNumber();
+
+        return hashCode;
+    }
+
+    /**
+     * Returns the machine-readable string representation of this terminal.
+     *
+     * The format of the string to return is:
+     * TerminalType:terminalNumber:emergency:numGates
+     * encodedGate1
+     * encodedGate2
+     * ...
+     * encodedGateN
+     *
+     * where TerminalType is the simple class name of this terminal,
+     * terminalNumber is the terminal number of this terminal
+     * emergency is whether or not this terminal is in a state of emergency
+     * numGates is the number of gates in this terminal
+     * encodedGateX is the encoded representation of the Xth gate in this terminal
+     *
+     * @return encoded string representation of this terminal
+     */
+    @Override
+    public String encode() {
+        String spacer = ":";
+        String newLine = "\n";
+        String emergencyStatus = "false";
+        StringBuilder sb = new StringBuilder();
+
+        if (this.hasEmergency()) {
+            emergencyStatus = "true";
+        }
+
+        sb.append(this.getClass().getSimpleName()).append(spacer).append(this.getTerminalNumber())
+                .append(spacer).append(emergencyStatus).append(spacer)
+                .append(this.getGates().size());
+        sb.append(newLine);
+
+        for (Gate gate : this.getGates()) {
+            sb.append(gate.encode());
+            sb.append(newLine);
+        }
+
+        sb.delete(sb.lastIndexOf(newLine), sb.length() - 1);
+
+        return sb.toString();
     }
 }
