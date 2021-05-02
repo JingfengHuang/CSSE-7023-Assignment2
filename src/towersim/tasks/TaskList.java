@@ -59,7 +59,7 @@ public class TaskList {
                     }
                 }
             } else {
-                //If task is the last element of the task list, then validate first task
+                //If task reaches the end of the task list, then validate first task
                 if (task.getType().name().equals("TAKEOFF")) {
                     if (!(this.tasks.get(0).getType().name().equals("AWAY"))) {
                         throw new IllegalArgumentException();
