@@ -3,6 +3,7 @@ package towersim.aircraft;
 import towersim.tasks.TaskList;
 import towersim.tasks.TaskType;
 import towersim.util.EmergencyState;
+import towersim.util.Encodable;
 import towersim.util.OccupancyLevel;
 import towersim.util.Tickable;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  * Represents an aircraft whose movement is managed by the system.
  * @ass1
  */
-public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencyState {
+public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencyState, Encodable {
 
     /**
      * Weight of a litre of aviation fuel, in kilograms.

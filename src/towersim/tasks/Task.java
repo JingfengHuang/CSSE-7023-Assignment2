@@ -1,5 +1,7 @@
 package towersim.tasks;
 
+import towersim.util.Encodable;
+
 import java.util.Objects;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Objects;
  * Tasks relate to an aircraft's movement and ground operations.
  * @ass1
  */
-public class Task {
+public class Task implements Encodable {
     /** Type of task. */
     private final TaskType type;
 
