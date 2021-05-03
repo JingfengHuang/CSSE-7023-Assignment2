@@ -22,6 +22,21 @@ import java.util.*;
  * @ass1
  */
 public class ControlTower implements Tickable {
+    /**
+     * number of ticks that have elapsed since the tower was first created
+     */
+    private long ticksElapsed;
+
+    /**
+     * queue of aircraft waiting to land
+     */
+    private LandingQueue landingQueue;
+
+    /**
+     * queue of aircraft waiting to take off
+     */
+    private TakeoffQueue takeoffQueue;
+
     /** List of all aircraft managed by the control tower. */
     private final List<Aircraft> aircraft;
 
@@ -29,12 +44,37 @@ public class ControlTower implements Tickable {
     private final List<Terminal> terminals;
 
     /**
+     * Mapping of aircraft that are loading cargo to the number of ticks remaining for loading
+     */
+    private Map<Aircraft, Integer> loadingAircraft;
+
+    /**
      * Creates a new ControlTower.
+     *
+     * The number of ticks elapsed, list of aircraft, landing queue,
+     * takeoff queue and map of loading aircraft to loading times should
+     * all be set to the values passed as parameters.
+     *
+     * The list of terminals should be initialised as an empty list.
+     * @param ticksElapsed - number of ticks that have elapsed since the tower was first created
+     * @param aircraft - list of aircraft managed by the control tower
+     * @param landingQueue - queue of aircraft waiting to land
+     * @param takeoffQueue - queue of aircraft waiting to take off
+     * @param loadingAircraft - mapping of aircraft that are loading cargo to the
+     *                       number of ticks remaining for loading
      * @ass1
      */
-    public ControlTower() {
+    public ControlTower(long ticksElapsed,
+                        List<Aircraft> aircraft,
+                        LandingQueue landingQueue,
+                        TakeoffQueue takeoffQueue,
+                        Map<Aircraft,Integer> loadingAircraft) {
+        this.ticksElapsed = ticksElapsed;
         this.aircraft = new ArrayList<>();
         this.terminals = new ArrayList<>();
+        this.landingQueue = landingQueue;
+        this.takeoffQueue = takeoffQueue;
+        this.loadingAircraft = loadingAircraft;
     }
 
     /**
@@ -70,6 +110,9 @@ public class ControlTower implements Tickable {
      * If there is no suitable gate for the aircraft, the {@code NoSuitableGateException} thrown by
      * {@code findUnoccupiedGate()} should be propagated out of this method.
      *
+     * After the aircraft has been added, it should be placed in the appropriate queues
+     * by calling placeAircraftInQueues(Aircraft).
+     *
      * @param aircraft aircraft to add
      * @throws NoSuitableGateException if there is no suitable gate for an aircraft with a current
      *                                 task type of {@code WAIT} or {@code LOAD}
@@ -86,6 +129,8 @@ public class ControlTower implements Tickable {
             }
         }
         this.aircraft.add(aircraft);
+
+        this.placeAircraftInQueues(aircraft);
     }
 
     /**
@@ -111,6 +156,9 @@ public class ControlTower implements Tickable {
      * for an aircraft with an AircraftType of {@code AIRPLANE}, only AirplaneTerminals may be
      * considered.
      * <p>
+     *
+     * Terminals that are currently in a state of emergency should not be considered.
+     *
      * For each compatible terminal, the {@link Terminal#findUnoccupiedGate()} method should be
      * called to attempt to find an unoccupied gate in that terminal. If
      * {@code findUnoccupiedGate()} does not find a suitable gate, the next compatible terminal
@@ -127,18 +175,20 @@ public class ControlTower implements Tickable {
     public Gate findUnoccupiedGate(Aircraft aircraft) throws NoSuitableGateException {
         AircraftType aircraftType = aircraft.getCharacteristics().type;
         for (Terminal terminal : terminals) {
-            /*
-             * Only check for available gates at terminals that are of the same aircraft type as
-             * the aircraft
-             */
-            if ((terminal instanceof AirplaneTerminal && aircraftType == AircraftType.AIRPLANE)
-                    || (terminal instanceof HelicopterTerminal
-                            && aircraftType == AircraftType.HELICOPTER)) {
-                try {
-                    // This terminal found a gate, return it
-                    return terminal.findUnoccupiedGate();
-                } catch (NoSuitableGateException e) {
-                    // If this terminal has no unoccupied gates, try the next one
+            if (!terminal.hasEmergency()) {
+                /*
+                 * Only check for available gates at terminals that are of the same aircraft type as
+                 * the aircraft
+                 */
+                if ((terminal instanceof AirplaneTerminal && aircraftType == AircraftType.AIRPLANE)
+                        || (terminal instanceof HelicopterTerminal
+                        && aircraftType == AircraftType.HELICOPTER)) {
+                    try {
+                        // This terminal found a gate, return it
+                        return terminal.findUnoccupiedGate();
+                    } catch (NoSuitableGateException e) {
+                        // If this terminal has no unoccupied gates, try the next one
+                    }
                 }
             }
         }
@@ -166,19 +216,250 @@ public class ControlTower implements Tickable {
 
     /**
      * Advances the simulation by one tick.
-     * <p>
-     * On each tick, the control tower should call {@link Aircraft#tick()} on all aircraft managed
-     * by the control tower.
-     * <p>
+     *
+     * On each tick, the control tower should:
+     * 1. Call {@link Aircraft#tick()} on all aircraft managed by the control tower.
+     *
+     * 2. Move all aircraft with a current task type of AWAY or WAIT to their next task.
+     *
+     * 3. Process loading aircraft by calling loadAircraft().
+     *
+     * 4. On every second tick, attempt to land an aircraft by calling tryLandAircraft().
+     * If an aircraft cannot be landed, attempt to allow an aircraft to take off instead
+     * by calling tryTakeOffAircraft(). Note that this begins from the second time tick()
+     * is called and every second tick thereafter.
+     *
+     * 5. If this is not a tick where the control tower is attempting to land an aircraft,
+     * an aircraft should be allowed to take off instead. This ensures that aircraft
+     * wishing to take off and land are given an equal share of the runway.
+     *
+     * 6. Place all aircraft in their appropriate queues by calling placeAllAircraftInQueues().
+     *
      * Note that the actions performed by {@code tick()} are very simple at the moment and will be
      * expanded on in assignment 2.
      * @ass1
      */
     @Override
     public void tick() {
-        // Call tick() on all other sub-entities
+        this.ticksElapsed ++;
+
         for (Aircraft aircraft : this.aircraft) {
             aircraft.tick();
+            if (aircraft.getTaskList().getCurrentTask().getType() == TaskType.AWAY
+                    || aircraft.getTaskList().getCurrentTask().getType() == TaskType.WAIT) {
+                aircraft.getTaskList().moveToNextTask();
+            }
+        }
+
+        if (this.ticksElapsed % 2 == 0) {
+            if (this.tryLandAircraft()) {
+                //ignore
+            } else {
+                this.tryTakeOffAircraft();
+            }
+        } else {
+            this.tryTakeOffAircraft();
+        }
+
+        this.placeAllAircraftInQueues();
+    }
+
+    /**
+     * Returns the number of ticks that have elapsed for this control tower.
+     *
+     * If the control tower was created with a non-zero number of elapsed ticks,
+     * this number should be taken into account in the return value of this method.
+     *
+     * @return number of ticks elapsed
+     */
+    public long getTicksElapsed() {
+        return this.ticksElapsed;
+    }
+
+    /**
+     * Returns the queue of aircraft waiting to land.
+     *
+     * @return landing queue
+     */
+    public AircraftQueue getLandingQueue() {
+        return this.landingQueue;
+    }
+
+    /**
+     * Returns the queue of aircraft waiting to take off.
+     *
+     * @return takeoff queue
+     */
+    public AircraftQueue getTakeoffQueue() {
+        return this.takeoffQueue;
+    }
+
+    /**
+     * Returns the mapping of loading aircraft to their remaining load times.
+     *
+     * @return loading aircraft map
+     */
+    public Map<Aircraft,Integer> getLoadingAircraft() {
+        return this.loadingAircraft;
+    }
+
+    /**
+     * Attempts to land one aircraft waiting in the landing queue and park it at a suitable gate.
+     *
+     * If there are no aircraft in the landing queue waiting to land,
+     * then the method should return false and no further action should be taken.
+     *
+     * If there is at least one aircraft in the landing queue,
+     * then a suitable gate should be found for the aircraft at the front of the queue.
+     *
+     * If there is no suitable gate, the aircraft should not be landed and should remain in the queue,
+     * and the method should return false and no further action should be taken.
+     *
+     * If there is a suitable gate, the aircraft should be removed from the queue,
+     * and it should be parked at that gate. The aircraft's passengers or freight should be
+     * unloaded immediately, by calling Aircraft.unload().
+     *
+     * Finally, the landed aircraft should move on to the next task in its task list,
+     * and the method should return true.
+     *
+     * @return true if an aircraft was successfully landed and parked; false otherwise
+     */
+    public boolean tryLandAircraft() {
+        if (this.landingQueue.peekAircraft() == null) {
+            return false;
+        } else {
+            Aircraft nextLandingAircraft = this.landingQueue.peekAircraft();
+            try {
+                Gate suitableGate = this.findUnoccupiedGate(nextLandingAircraft);
+                Aircraft landedAircraft = this.landingQueue.removeAircraft();
+                try {
+                    suitableGate.parkAircraft(landedAircraft);
+                    landedAircraft.unload();
+                    landedAircraft.getTaskList().moveToNextTask();
+                } catch (NoSpaceException nse) {
+                    //ignore
+                }
+            } catch (NoSuitableGateException nsge) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Attempts to allow one aircraft waiting in the takeoff queue to take off.
+     *
+     * If there are no aircraft waiting in the takeoff queue, then the method should return.
+     * Otherwise, the aircraft at the front of the takeoff queue should be removed from
+     * the queue and it should move to the next task in its task list.
+     */
+    public void tryTakeOffAircraft() {
+        if (this.takeoffQueue.peekAircraft() == null) {
+            return;
+        } else {
+            Aircraft takingOffAircraft = this.takeoffQueue.removeAircraft();
+            takingOffAircraft.getTaskList().moveToNextTask();
         }
     }
+
+    /**
+     * Updates the time remaining to load on all currently loading aircraft
+     * and removes aircraft from their gate once finished loading.
+     *
+     * Any aircraft in the loading map should have their time remaining decremented by one tick.
+     * If any aircraft's time remaining is now zero, it has finished loading and should be
+     * removed from the loading map.
+     * Additionally, it should leave the gate it is parked at and should move on to its next task.
+     */
+    public void loadAircraft() {
+        if (!this.loadingAircraft.isEmpty()) {
+            for (Map.Entry<Aircraft, Integer> entry : this.loadingAircraft.entrySet()) {
+                this.loadingAircraft.replace(entry.getKey(), entry.getValue() - 1);
+
+                if (entry.getValue() <= 0) {
+                    Aircraft finishedLoadingAircraft = entry.getKey();
+                    this.loadingAircraft.remove(entry.getKey());
+
+                    Gate initialGate = this.findGateOfAircraft(finishedLoadingAircraft);
+                    if (initialGate != null) {
+                        initialGate.aircraftLeaves();
+                    }
+                    finishedLoadingAircraft.getTaskList().moveToNextTask();
+                }
+            }
+        }
+    }
+
+    /**
+     * Calls placeAircraftInQueues(Aircraft) on all aircraft managed by the control tower.
+     */
+    public void placeAllAircraftInQueues() {
+        if (!this.aircraft.isEmpty()) {
+            for (Aircraft aircraft : this.aircraft) {
+                this.placeAircraftInQueues(aircraft);
+            }
+        }
+    }
+
+    /**
+     * Moves the given aircraft to the appropriate queue based on its current task.
+     *
+     * If the aircraft's current task type is LAND and the landing queue does not already
+     * contain the aircraft, it should be added to the landing queue.
+     *
+     * If the aircraft's current task type is TAKEOFF and the takeoff queue does not already
+     * contain the aircraft, it should be added to the takeoff queue.
+     *
+     * If the aircraft's current task type is LOAD and the loading map does not already
+     * contain the aircraft, it should be added to the loading map with an associated value
+     * of Aircraft.getLoadingTime()
+     *
+     * @param aircraft - aircraft to move to appropriate queue
+     */
+    public void placeAircraftInQueues(Aircraft aircraft) {
+        if (aircraft.getTaskList().getCurrentTask().getType() == TaskType.LAND) {
+            if (!this.landingQueue.containsAircraft(aircraft)) {
+                this.landingQueue.addAircraft(aircraft);
+            }
+        } else if (aircraft.getTaskList().getCurrentTask().getType() == TaskType.TAKEOFF) {
+            if (!this.takeoffQueue.containsAircraft(aircraft)) {
+                this.takeoffQueue.addAircraft(aircraft);
+            }
+        } else if (aircraft.getTaskList().getCurrentTask().getType() == TaskType.LOAD) {
+            if (!this.loadingAircraft.containsKey(aircraft)) {
+                this.loadingAircraft.put(aircraft, aircraft.getLoadingTime());
+            }
+        }
+    }
+
+    /**
+     * Returns the human-readable string representation of this control tower.
+     *
+     * The format of the string to return is:
+     * ControlTower: numTerminals terminals, numAircraft total aircraft
+     * (numLanding LAND, numTakeoff TAKEOFF, numLoad LOAD)
+     *
+     * where numTerminals is the number of terminals, numAircraft is the number of aircraft,
+     * numLanding is the number of aircraft in the landing queue,
+     * numTakeoff is the number of aircraft in the takeoff queue,
+     * and numLoad is the number of aircraft in the loading map.
+     *
+     * @return string representation of this control tower
+     */
+    @Override
+    public String toString() {
+
+        return "ControlTower: " + this.getTerminals().size() +
+                " terminals, " +
+                this.aircraft.size() +
+                " total aircraft (" +
+                this.getLandingQueue().getAircraftInOrder().size() +
+                " LAND, " +
+                this.getTakeoffQueue().getAircraftInOrder().size() +
+                " TAKEOFF, " +
+                this.getLoadingAircraft().size() +
+                " LOAD)";
+    }
+
 }
