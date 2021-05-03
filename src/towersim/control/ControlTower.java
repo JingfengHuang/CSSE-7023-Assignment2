@@ -251,6 +251,8 @@ public class ControlTower implements Tickable {
             }
         }
 
+        this.loadAircraft();
+
         if (this.ticksElapsed % 2 == 0) {
             if (this.tryLandAircraft()) {
                 //ignore
