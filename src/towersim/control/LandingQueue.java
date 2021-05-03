@@ -170,7 +170,7 @@ public class LandingQueue extends AircraftQueue {
         List<Aircraft> landingQueueCopy = new ArrayList<Aircraft>(this.landingQueue);
         List<Aircraft> orderedAircraft = new ArrayList<Aircraft>();
         if (landingQueueCopy.size() > 0) {
-            for (int i = 0; i < landingQueue.size(); i++) {
+            for (int i = 0; i < landingQueueCopy.size(); i++) {
                 orderedAircraft.add(this.getPeekAircraft(landingQueueCopy));
             }
         }
