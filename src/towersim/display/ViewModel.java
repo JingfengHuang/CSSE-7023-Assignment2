@@ -127,7 +127,16 @@ public class ViewModel {
      * @ass2
      */
     public EventHandler<ActionEvent> getDroneAlertHandler() {
-        return null; // TODO implement for assignment 2
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                for (Terminal terminal : tower.getTerminals()) {
+                    terminal.declareEmergency();
+                }
+
+                registerChange();
+            }
+        };
     }
 
     /**
@@ -140,7 +149,16 @@ public class ViewModel {
      * @ass2
      */
     public EventHandler<ActionEvent> getDroneClearHandler() {
-        return null; // TODO implement for assignment 2
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                for (Terminal terminal : tower.getTerminals()) {
+                    terminal.clearEmergency();
+                }
+
+                registerChange();
+            }
+        };
     }
 
     /**
@@ -169,7 +187,39 @@ public class ViewModel {
      * @ass2
      */
     public EventHandler<ActionEvent> getFindSuitableGateHandler() {
-        return null; // TODO implement for assignment 2
+        if (this.getSelectedAircraft().get() == null) {
+            return new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                }
+
+            };
+        } else {
+            Aircraft currentSelectedAircraft = this.selectedAircraft.get();
+            if (currentSelectedAircraft.getTaskList().getCurrentTask().getType() != TaskType.LAND) {
+                return new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                    }
+
+                };
+            } else {
+                return new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        try {
+                            Gate gate = tower.findUnoccupiedGate(currentSelectedAircraft);
+                            suitableGateText.setValue(gate.toString());
+                        } catch (NoSuitableGateException nsge) {
+                            suitableGateText.setValue("NoSuitableGateException");
+                        }
+                    }
+
+                };
+            }
+        }
     }
 
     /**
@@ -242,7 +292,39 @@ public class ViewModel {
      */
     public void saveAs(Writer tickWriter, Writer aircraftWriter, Writer queuesWriter,
             Writer terminalsWithGatesWriter) throws IOException {
-        // TODO implement for assignment 2
+
+        //Tick writer
+        tickWriter.write("" + this.tower.getTicksElapsed());
+
+        //Aircraft writer
+        aircraftWriter.write(this.tower.getAircraft().size());
+        for (Aircraft aircraft : this.tower.getAircraft()) {
+            aircraftWriter.write("\n" + aircraft.encode());
+        }
+
+        //Queue writer
+        queuesWriter.write(this.tower.getTakeoffQueue().encode() + "\n");
+        queuesWriter.write(this.tower.getLandingQueue().encode() + "\n");
+        queuesWriter.write("LoadingAircraft:" + this.tower.getLoadingAircraft().size() + "\n");
+
+        int i = 0; //Map index counter
+        int loadingAircraftMapSize = this.tower.getLoadingAircraft().size();
+        for (Map.Entry<Aircraft, Integer> entry : this.tower.getLoadingAircraft().entrySet()) {
+            if (i < loadingAircraftMapSize - 1) { //If it is not the last entry
+                aircraftWriter.write(entry.getKey().getCallsign() + ":" + entry.getValue() + ",");
+            } else { //If it is the last entry
+                aircraftWriter.write(entry.getKey().getCallsign() + ":" + entry.getValue());
+            }
+
+            i++;
+        }
+
+        //Terminals with Gates writer
+        terminalsWithGatesWriter.write(this.tower.getTerminals().size());
+        for (Terminal terminal : this.tower.getTerminals()) {
+            terminalsWithGatesWriter.write("\n" + terminal.encode());
+        }
+
     }
 
     /**
