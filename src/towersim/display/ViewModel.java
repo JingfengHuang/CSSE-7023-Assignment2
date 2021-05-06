@@ -325,6 +325,12 @@ public class ViewModel {
             terminalsWithGatesWriter.write("\n" + terminal.encode());
         }
 
+        //Close all writers
+        tickWriter.close();
+        aircraftWriter.close();
+        queuesWriter.close();
+        terminalsWithGatesWriter.close();
+
     }
 
     /**
