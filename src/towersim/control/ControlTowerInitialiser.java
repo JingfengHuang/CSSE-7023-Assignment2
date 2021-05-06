@@ -459,7 +459,7 @@ public class ControlTowerInitialiser {
 
         //Check if the first line contains more/fewer colons (:) than expected
         String[] typeAndNumber = line.split(":");
-        if (typeAndNumber.length != 1) {
+        if (typeAndNumber.length != 2) {
             throw new MalformedSaveException();
         }
 
@@ -475,15 +475,16 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
-        //Read second line
-        line = reader.readLine();
+        if (aircraftNumber > 0) {
+            //Read second line
+            line = reader.readLine();
 
-        //Check if the number of callsign is correct
-        if (line == null && aircraftNumber > 0) {
-            throw new MalformedSaveException();
-        }
+            //Check if the number of callsign is correct
+            if (line == null) {
+                throw new MalformedSaveException();
+            }
 
-        if (line != null) {
+
             String[] callsigns = line.split(",");
 
             if (callsigns.length != aircraftNumber) {
@@ -515,6 +516,7 @@ public class ControlTowerInitialiser {
                 }
             }
         }
+
     }
 
     /**
@@ -584,53 +586,55 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
-        //Read the second line
-        line = reader.readLine();
+        if (queueLength > 0) {
+            //Read the second line
+            line = reader.readLine();
 
-        //Check if the queue length declared is correct
-        if (queueLength > 0 && line == null) {
-            throw new MalformedSaveException();
-        }
-
-        String[] callsignTickRemainingPairs = line.split(",");
-        if (queueLength != callsignTickRemainingPairs.length) {
-            throw new MalformedSaveException();
-        }
-
-        for (String callsignTickRemainingPair : callsignTickRemainingPairs) {
-            String[] callsignAndTickRemaining = callsignTickRemainingPair.split(":");
-
-            //Check if each callsign tick remaining pair is correct
-            if (callsignAndTickRemaining.length != 2) {
+            //Check if the queue length declared is correct
+            if (line == null) {
                 throw new MalformedSaveException();
             }
 
-            //Check if each callsign is valid
-            Aircraft targetAircraft = null;
-            for (Aircraft craft : aircraft) {
-                if (craft.getCallsign().equals(callsignAndTickRemaining[0])) {
-                    targetAircraft = craft;
-                    break;
+            String[] callsignTickRemainingPairs = line.split(",");
+            if (queueLength != callsignTickRemainingPairs.length) {
+                throw new MalformedSaveException();
+            }
+
+            for (String callsignTickRemainingPair : callsignTickRemainingPairs) {
+                String[] callsignAndTickRemaining = callsignTickRemainingPair.split(":");
+
+                //Check if each callsign tick remaining pair is correct
+                if (callsignAndTickRemaining.length != 2) {
+                    throw new MalformedSaveException();
                 }
-            }
 
-            if (targetAircraft == null) {
-                throw new MalformedSaveException();
-            }
+                //Check if each callsign is valid
+                Aircraft targetAircraft = null;
+                for (Aircraft craft : aircraft) {
+                    if (craft.getCallsign().equals(callsignAndTickRemaining[0])) {
+                        targetAircraft = craft;
+                        break;
+                    }
+                }
 
-            //Check if each ticks remaining is valid
-            try {
-                ticksRemaining = Integer.parseInt(callsignAndTickRemaining[1]);
-            } catch (NumberFormatException nfe) {
-                throw new MalformedSaveException();
-            }
+                if (targetAircraft == null) {
+                    throw new MalformedSaveException();
+                }
 
-            if (ticksRemaining < 1) {
-                throw new MalformedSaveException();
-            }
+                //Check if each ticks remaining is valid
+                try {
+                    ticksRemaining = Integer.parseInt(callsignAndTickRemaining[1]);
+                } catch (NumberFormatException nfe) {
+                    throw new MalformedSaveException();
+                }
 
-            //If everything is correct, add entries to the given map
-            loadingAircraft.put(targetAircraft, ticksRemaining);
+                if (ticksRemaining < 1) {
+                    throw new MalformedSaveException();
+                }
+
+                //If everything is correct, add entries to the given map
+                loadingAircraft.put(targetAircraft, ticksRemaining);
+            }
         }
     }
 
@@ -720,7 +724,7 @@ public class ControlTowerInitialiser {
                     throw new MalformedSaveException();
                 } else {
                     try {
-                        terminal.addGate(readGate(line, aircraft));
+                        terminal.addGate(readGate(nextLine, aircraft));
                     } catch (NoSpaceException nse) {
                         //Ignore. New terminal has no gate, and gate number has been checked
                     }
