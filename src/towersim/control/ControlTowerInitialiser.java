@@ -104,12 +104,21 @@ public class ControlTowerInitialiser {
         for (int i = 0; i < aircraftNum; i++) {
             line = bufferedReader.readLine();
 
+            if (line == null) {
+                throw new MalformedSaveException();
+            }
+
             aircraftList.add(readAircraft(line));
 
             aircraftCounter++;
         }
 
         if (aircraftCounter != aircraftNum) {
+            throw new MalformedSaveException();
+        }
+
+        line = bufferedReader.readLine();
+        if (line != null) {
             throw new MalformedSaveException();
         }
 
@@ -288,13 +297,21 @@ public class ControlTowerInitialiser {
 
         try {
             terminalNumber = Integer.parseInt(line);
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             throw new MalformedSaveException();
         }
 
         for (int i = 0; i < terminalNumber; i++) {
             line = bufferedReader.readLine();
+            if (line == null) {
+                throw new MalformedSaveException();
+            }
             terminals.add(readTerminal(line, bufferedReader, aircraft));
+        }
+
+        line = bufferedReader.readLine();
+        if (line != null) {
+            throw new MalformedSaveException();
         }
 
         return terminals;
@@ -371,6 +388,9 @@ public class ControlTowerInitialiser {
             } else {
                 if (taskName.startsWith("LOAD@")) {
                     String[] splitLoadTask = taskName.split("@");
+                    if (splitLoadTask.length != 2) {
+                        throw new MalformedSaveException();
+                    }
                     try {
                         loadPercentage = Integer.parseInt(splitLoadTask[1]);
                     } catch (NumberFormatException nfe) {
@@ -586,7 +606,7 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
-        if (queueLength > 0) {
+        if (queueLength != 0) {
             //Read the second line
             line = reader.readLine();
 
@@ -634,6 +654,11 @@ public class ControlTowerInitialiser {
 
                 //If everything is correct, add entries to the given map
                 loadingAircraft.put(targetAircraft, ticksRemaining);
+            }
+        } else {
+            line = reader.readLine();
+            if (line != null) {
+                throw new MalformedSaveException();
             }
         }
     }
