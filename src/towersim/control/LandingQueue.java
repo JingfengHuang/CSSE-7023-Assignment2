@@ -4,6 +4,7 @@ import towersim.aircraft.Aircraft;
 import towersim.aircraft.PassengerAircraft;
 import towersim.util.Encodable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,11 +67,15 @@ public class LandingQueue extends AircraftQueue {
             if (aircraft.hasEmergency()) {
                 return aircraft;
             }
+        }
 
+        for (Aircraft aircraft : this.landingQueue) {
             if (aircraft.getFuelPercentRemaining() <= 20) {
                 return aircraft;
             }
+        }
 
+        for (Aircraft aircraft : this.landingQueue) {
             if (aircraft instanceof PassengerAircraft) {
                 return aircraft;
             }
@@ -100,13 +105,17 @@ public class LandingQueue extends AircraftQueue {
                 this.landingQueue.remove(aircraft);
                 return poppedAircraft;
             }
+        }
 
+        for (Aircraft aircraft : this.landingQueue) {
             if (aircraft.getFuelPercentRemaining() <= 20) {
                 poppedAircraft = aircraft;
                 this.landingQueue.remove(aircraft);
                 return poppedAircraft;
             }
+        }
 
+        for (Aircraft aircraft : this.landingQueue) {
             if (aircraft instanceof PassengerAircraft) {
                 poppedAircraft = aircraft;
                 this.landingQueue.remove(aircraft);
@@ -120,46 +129,6 @@ public class LandingQueue extends AircraftQueue {
     }
 
     /**
-     * Removes and returns the aircraft at the front of a given queue.
-     * Returns null if the queue is empty.
-     *
-     * The same rules as described in peekAircraft() should be used
-     * for determining which aircraft to remove and return.
-     *
-     * @return aircraft at front of the given queue
-     */
-    private Aircraft getPeekAircraft(List<Aircraft> aircraftQueue) {
-        Aircraft poppedAircraft;
-        if (aircraftQueue.isEmpty()) {
-            return null;
-        }
-
-        for (Aircraft aircraft : aircraftQueue) {
-            if (aircraft.hasEmergency()) {
-                poppedAircraft = aircraft;
-                aircraftQueue.remove(aircraft);
-                return poppedAircraft;
-            }
-
-            if (aircraft.getFuelPercentRemaining() <= 20) {
-                poppedAircraft = aircraft;
-                aircraftQueue.remove(aircraft);
-                return poppedAircraft;
-            }
-
-            if (aircraft instanceof PassengerAircraft) {
-                poppedAircraft = aircraft;
-                aircraftQueue.remove(aircraft);
-                return poppedAircraft;
-            }
-        }
-
-        poppedAircraft = aircraftQueue.get(0);
-        aircraftQueue.remove(0);
-        return poppedAircraft;
-    }
-
-    /**
      * Returns a list containing all aircraft in the queue, in order.
      *
      * Adding or removing elements from the returned list should not affect the original queue.
@@ -167,13 +136,15 @@ public class LandingQueue extends AircraftQueue {
      * @return list of all aircraft in queue, in queue order
      */
     public List<Aircraft> getAircraftInOrder() {
-        List<Aircraft> landingQueueCopy = new ArrayList<Aircraft>(this.landingQueue);
-        List<Aircraft> orderedAircraft = new ArrayList<Aircraft>();
+        ArrayList<Aircraft> landingQueueCopy = new ArrayList<Aircraft>(this.landingQueue);
+        ArrayList<Aircraft> orderedAircraft = new ArrayList<Aircraft>();
         if (landingQueueCopy.size() > 0) {
             for (int i = 0; i < landingQueueCopy.size(); i++) {
-                orderedAircraft.add(this.getPeekAircraft(landingQueueCopy));
+                orderedAircraft.add(this.removeAircraft());
             }
         }
+
+        this.landingQueue = landingQueueCopy;
 
         return orderedAircraft;
     }

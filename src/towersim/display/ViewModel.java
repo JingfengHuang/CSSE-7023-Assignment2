@@ -187,39 +187,22 @@ public class ViewModel {
      * @ass2
      */
     public EventHandler<ActionEvent> getFindSuitableGateHandler() {
-        if (this.getSelectedAircraft().get() == null) {
-            return new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Aircraft selectedAircraft = getSelectedAircraft().get();
 
+                if (selectedAircraft != null
+                        && selectedAircraft.getTaskList().getCurrentTask().getType() == TaskType.LAND) {
+                    try {
+                        Gate gate = tower.findUnoccupiedGate(selectedAircraft);
+                        suitableGateText.setValue(gate.toString());
+                    } catch (NoSuitableGateException nsg) {
+                        suitableGateText.setValue("NoSuitableGateException");
+                    }
                 }
-
-            };
-        } else {
-            Aircraft currentSelectedAircraft = this.selectedAircraft.get();
-            if (currentSelectedAircraft.getTaskList().getCurrentTask().getType() != TaskType.LAND) {
-                return new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-
-                    }
-
-                };
-            } else {
-                return new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        try {
-                            Gate gate = tower.findUnoccupiedGate(currentSelectedAircraft);
-                            suitableGateText.setValue(gate.toString());
-                        } catch (NoSuitableGateException nsge) {
-                            suitableGateText.setValue("NoSuitableGateException");
-                        }
-                    }
-
-                };
             }
-        }
+        };
     }
 
     /**

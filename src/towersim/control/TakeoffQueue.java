@@ -72,26 +72,6 @@ public class TakeoffQueue extends AircraftQueue {
     }
 
     /**
-     * Removes and returns the aircraft at the front of a given queue.
-     * Returns null if the queue is empty.
-     *
-     * Aircraft returned by removeAircraft() should be in the same order
-     * that they were in the given queue.
-     *
-     * @return aircraft at front of the given queue
-     */
-    private Aircraft getPeekAircraft(List<Aircraft> givenTakeoffQueue) {
-        Aircraft firstAircraft;
-        if (givenTakeoffQueue.isEmpty()) {
-            return null;
-        } else {
-            firstAircraft = givenTakeoffQueue.get(0);
-            givenTakeoffQueue.remove(0);
-            return firstAircraft;
-        }
-    }
-
-    /**
      * Returns a list containing all aircraft in the queue, in order.
      *
      * That is, the first element of the returned list should be the
@@ -100,14 +80,16 @@ public class TakeoffQueue extends AircraftQueue {
      * Adding or removing elements from the returned list should not affect the original queue.
      */
     public List<Aircraft> getAircraftInOrder() {
-        List<Aircraft> takeoffQueueCopy = new ArrayList<Aircraft> (this.takeoffQueue);
-        List<Aircraft> orderedTakeoffQueue = new ArrayList<Aircraft>();
+        ArrayList<Aircraft> takeoffQueueCopy = new ArrayList<Aircraft> (this.takeoffQueue);
+        ArrayList<Aircraft> orderedTakeoffQueue = new ArrayList<Aircraft>();
 
         if (!(this.takeoffQueue.isEmpty())) {
             for (int i = 0; i < takeoffQueueCopy.size(); i++) {
-                orderedTakeoffQueue.add(this.getPeekAircraft(takeoffQueueCopy));
+                orderedTakeoffQueue.add(this.removeAircraft());
             }
         }
+
+        this.takeoffQueue = takeoffQueueCopy;
 
         return orderedTakeoffQueue;
     }

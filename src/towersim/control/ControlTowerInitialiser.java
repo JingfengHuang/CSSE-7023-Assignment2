@@ -106,7 +106,7 @@ public class ControlTowerInitialiser {
 
             aircraftList.add(readAircraft(line));
 
-            aircraftCounter ++;
+            aircraftCounter++;
         }
 
         if (aircraftCounter != aircraftNum) {
@@ -325,7 +325,7 @@ public class ControlTowerInitialiser {
 
         loadQueues(queues, allAircraft, takeoffQueue, landingQueue, loadingAircraft);
 
-        ControlTower controlTower = new ControlTower(loadTick(tick), loadAircraft(aircraft),
+        ControlTower controlTower = new ControlTower(tickNumber, allAircraft,
                 landingQueue, takeoffQueue, loadingAircraft);
 
         for (Terminal terminal : terminals) {
@@ -561,7 +561,7 @@ public class ControlTowerInitialiser {
      * @throws IOException - if an IOException is encountered when reading from the reader
      */
     public static void readLoadingAircraft(BufferedReader reader, List<Aircraft> aircraft,
-                                           Map<Aircraft,Integer> loadingAircraft)
+                                           Map<Aircraft, Integer> loadingAircraft)
             throws IOException, MalformedSaveException {
         int queueLength;
         int ticksRemaining;

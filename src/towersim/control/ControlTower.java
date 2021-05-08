@@ -375,20 +375,20 @@ public class ControlTower implements Tickable {
      * Additionally, it should leave the gate it is parked at and should move on to its next task.
      */
     public void loadAircraft() {
-        if (!this.loadingAircraft.isEmpty()) {
-            for (Map.Entry<Aircraft, Integer> entry : this.loadingAircraft.entrySet()) {
-                this.loadingAircraft.replace(entry.getKey(), entry.getValue() - 1);
+        Iterator<Map.Entry<Aircraft, Integer>> itr = this.loadingAircraft.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<Aircraft, Integer> entry = itr.next();
+            this.loadingAircraft.put(entry.getKey(), entry.getValue() - 1);
 
-                if (entry.getValue() <= 0) {
-                    Aircraft finishedLoadingAircraft = entry.getKey();
-                    this.loadingAircraft.remove(entry.getKey());
+            if (entry.getValue() <= 0) {
+                Aircraft finishedLoadingAircraft = entry.getKey();
+                itr.remove();
 
-                    Gate initialGate = this.findGateOfAircraft(finishedLoadingAircraft);
-                    if (initialGate != null) {
-                        initialGate.aircraftLeaves();
-                    }
-                    finishedLoadingAircraft.getTaskList().moveToNextTask();
+                Gate initialGate = this.findGateOfAircraft(finishedLoadingAircraft);
+                if (initialGate != null) {
+                    initialGate.aircraftLeaves();
                 }
+                finishedLoadingAircraft.getTaskList().moveToNextTask();
             }
         }
     }
