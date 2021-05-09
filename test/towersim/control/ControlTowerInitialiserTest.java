@@ -42,7 +42,9 @@ public class ControlTowerInitialiserTest {
                 new Task(TaskType.LOAD, 100),
                 new Task(TaskType.TAKEOFF),
                 new Task(TaskType.AWAY),
-                new Task(TaskType.AWAY)));
+                new Task(TaskType.AWAY),
+                new Task(TaskType.LAND),
+                new Task(TaskType.LOAD)));
 
         TaskList taskListLand = new TaskList(List.of(
                 new Task(TaskType.LAND),
@@ -64,7 +66,8 @@ public class ControlTowerInitialiserTest {
                 new Task(TaskType.LOAD, 100),
                 new Task(TaskType.TAKEOFF),
                 new Task(TaskType.AWAY),
-                new Task(TaskType.AWAY)));
+                new Task(TaskType.AWAY),
+                new Task(TaskType.LAND)));
 
 
         this.takeoffAircraft1 = new PassengerAircraft("TK001",

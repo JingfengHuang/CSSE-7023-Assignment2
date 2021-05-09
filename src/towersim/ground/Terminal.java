@@ -274,14 +274,12 @@ public abstract class Terminal implements EmergencyState, OccupancyLevel, Encoda
         sb.append(this.getClass().getSimpleName()).append(spacer).append(this.getTerminalNumber())
                 .append(spacer).append(emergencyStatus).append(spacer)
                 .append(this.getGates().size());
-        sb.append(newLine);
+
 
         for (Gate gate : this.getGates()) {
-            sb.append(gate.encode());
             sb.append(newLine);
+            sb.append(gate.encode());
         }
-
-        sb.delete(sb.lastIndexOf(newLine), sb.length() - 1);
 
         return sb.substring(0);
     }
