@@ -31,68 +31,70 @@ public class TaskList {
         this.tasks = tasks;
         this.currentTaskIndex = 0;
 
-        for (Task task : this.tasks) {
-            //If task is not the last element of the task list, then validate next task
-            if (this.tasks.indexOf(task) != (this.tasks.size() - 1)) {
-                if (task.getType().name().equals("TAKEOFF")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("AWAY"))) {
-                        throw new IllegalArgumentException();
+        if (!this.tasks.isEmpty()) {
+            for (Task task : this.tasks) {
+                //If task is not the last element of the task list, then validate next task
+                if (this.tasks.indexOf(task) != (this.tasks.size() - 1)) {
+                    if (task.getType().name().equals("TAKEOFF")) {
+                        if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("AWAY"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("AWAY")) {
+                        if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("AWAY")
+                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("LAND"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("LAND")) {
+                        if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("WAIT")
+                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("LOAD"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("WAIT")) {
+                        if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("WAIT")
+                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("LOAD"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("LOAD")) {
+                        if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("TAKEOFF"))) {
+                            throw new IllegalArgumentException();
+                        }
                     }
-                } else if (task.getType().name().equals("AWAY")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("AWAY")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("LAND"))) {
-                        throw new IllegalArgumentException();
-                    }
-                } else if (task.getType().name().equals("LAND")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("LOAD"))) {
-                        throw new IllegalArgumentException();
-                    }
-                } else if (task.getType().name().equals("WAIT")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("LOAD"))) {
-                        throw new IllegalArgumentException();
-                    }
-                } else if (task.getType().name().equals("LOAD")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("TAKEOFF"))) {
-                        throw new IllegalArgumentException();
-                    }
-                }
-            } else {
-                //If task reaches the end of the task list, then validate first task
-                if (task.getType().name().equals("TAKEOFF")) {
-                    if (!(this.tasks.get(0).getType().name().equals("AWAY"))) {
-                        throw new IllegalArgumentException();
-                    }
-                } else if (task.getType().name().equals("AWAY")) {
-                    if (!(this.tasks.get(0).getType().name().equals("AWAY")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("LAND"))) {
-                        throw new IllegalArgumentException();
-                    }
-                } else if (task.getType().name().equals("LAND")) {
-                    if (!(this.tasks.get(0).getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("LOAD"))) {
-                        throw new IllegalArgumentException();
-                    }
-                } else if (task.getType().name().equals("WAIT")) {
-                    if (!(this.tasks.get(0).getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1)
-                            .getType().name().equals("LOAD"))) {
-                        throw new IllegalArgumentException();
-                    }
-                } else if (task.getType().name().equals("LOAD")) {
-                    if (!(this.tasks.get(0).getType().name().equals("TAKEOFF"))) {
-                        throw new IllegalArgumentException();
+                } else {
+                    //If task reaches the end of the task list, then validate first task
+                    if (task.getType().name().equals("TAKEOFF")) {
+                        if (!(this.tasks.get(0).getType().name().equals("AWAY"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("AWAY")) {
+                        if (!(this.tasks.get(0).getType().name().equals("AWAY")
+                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("LAND"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("LAND")) {
+                        if (!(this.tasks.get(0).getType().name().equals("WAIT")
+                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("LOAD"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("WAIT")) {
+                        if (!(this.tasks.get(0).getType().name().equals("WAIT")
+                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                .getType().name().equals("LOAD"))) {
+                            throw new IllegalArgumentException();
+                        }
+                    } else if (task.getType().name().equals("LOAD")) {
+                        if (!(this.tasks.get(0).getType().name().equals("TAKEOFF"))) {
+                            throw new IllegalArgumentException();
+                        }
                     }
                 }
             }

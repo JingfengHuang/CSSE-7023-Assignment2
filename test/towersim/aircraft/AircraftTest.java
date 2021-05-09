@@ -1,4 +1,3 @@
-/*
 package towersim.aircraft;
 
 import org.junit.Before;
@@ -24,11 +23,10 @@ public class AircraftTest {
 
     private final Random random = new Random();
 
-    */
-/*
+    /*
      * Dummy aircraft don't extend PassengerAircraft or FreightAircraft, useful for testing methods
      * overridden in Aircraft subclasses
-     *//*
+     */
 
     class DummyAircraft extends Aircraft {
         public DummyAircraft(String callsign, AircraftCharacteristics characteristics,
@@ -39,6 +37,11 @@ public class AircraftTest {
         @Override
         public int getLoadingTime() {
             return 3;
+        }
+
+        @Override
+        public void unload() {
+
         }
 
         @Override
@@ -283,4 +286,3 @@ public class AircraftTest {
                 passengerAircraft1.hasEmergency());
     }
 }
-*/
