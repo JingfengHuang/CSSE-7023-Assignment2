@@ -188,6 +188,6 @@ public class TaskList {
 
         sb.deleteCharAt(sb.length() - 1);
 
-        return sb.toString();
+        return sb.substring(0);
     }
 }

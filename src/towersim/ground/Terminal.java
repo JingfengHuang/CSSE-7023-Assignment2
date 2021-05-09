@@ -283,6 +283,6 @@ public abstract class Terminal implements EmergencyState, OccupancyLevel, Encoda
 
         sb.delete(sb.lastIndexOf(newLine), sb.length() - 1);
 
-        return sb.toString();
+        return sb.substring(0);
     }
 }

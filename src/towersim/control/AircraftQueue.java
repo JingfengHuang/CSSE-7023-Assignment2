@@ -88,7 +88,7 @@ public abstract class AircraftQueue implements Encodable {
 
         aircraftQueue.append("]");
 
-        return aircraftQueue.toString();
+        return aircraftQueue.substring(0);
     }
 
     /**
@@ -121,6 +121,6 @@ public abstract class AircraftQueue implements Encodable {
             }
         }
 
-        return encodeContent.toString();
+        return encodeContent.substring(0);
     }
 }
