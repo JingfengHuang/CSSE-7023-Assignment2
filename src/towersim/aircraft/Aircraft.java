@@ -311,30 +311,21 @@ public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencySta
      * @return encoded string representation of this aircraft
      */
     public String encode() {
-        String spacer = ":";
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.callsign);
-        sb.append(spacer);
-        sb.append(this.getCharacteristics().name());
-        sb.append(spacer);
-        sb.append(this.getTaskList().encode());
-        sb.append(spacer);
-
-        /* Multiply  the current amount of fuel onboard by 100, and cast it to integer.
-        Thus number after 2 decimal places of the original double will disappear.
-        Then this integer is divided by 100, and restore the initial 2 decimal numbers.
-         */
         double fuelAmount = ((int) (this.getFuelAmount() * 100)) / 100;
 
-        sb.append(fuelAmount);
-        sb.append(spacer);
+
+        String encode = "";
+
+        encode += this.callsign + ":" + this.characteristics.name()
+                + ":" + this.getTaskList().encode() + ":" + this.getFuelAmount() + ":";
 
         if (this.hasEmergency()) {
-            sb.append("true");
+            encode += "true";
         } else {
-            sb.append("false");
+            encode += "false"
         }
 
-        return sb.toString();
+        return encode;
+
     }
 }
