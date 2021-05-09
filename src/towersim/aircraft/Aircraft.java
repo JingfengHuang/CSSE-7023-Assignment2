@@ -7,6 +7,7 @@ import towersim.util.Encodable;
 import towersim.util.OccupancyLevel;
 import towersim.util.Tickable;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 /**
@@ -320,11 +321,8 @@ public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencySta
         sb.append(this.getTaskList().encode());
         sb.append(spacer);
 
-        /* Multiply  the current amount of fuel onboard by 100, and cast it to integer.
-        Thus number after 2 decimal places of the original double will disappear.
-        Then this integer is divided by 100, and restore the initial 2 decimal numbers.
-         */
-        double fuelAmount = ((int) (this.getFuelAmount() * 100)) / 100;
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fuelAmount = df.format(this.getFuelAmount());
 
         sb.append(fuelAmount);
         sb.append(spacer);
