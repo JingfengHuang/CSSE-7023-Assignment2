@@ -281,7 +281,7 @@ public class ViewModel {
         tickWriter.write("" + this.tower.getTicksElapsed());
 
         //Aircraft writer
-        aircraftWriter.write(this.tower.getAircraft().size());
+        aircraftWriter.write("" + this.tower.getAircraft().size());
         for (Aircraft aircraft : this.tower.getAircraft()) {
             aircraftWriter.write("\n" + aircraft.encode());
         }
@@ -304,7 +304,7 @@ public class ViewModel {
         }
 
         //Terminals with Gates writer
-        terminalsWithGatesWriter.write(this.tower.getTerminals().size());
+        terminalsWithGatesWriter.write("" + this.tower.getTerminals().size());
         for (Terminal terminal : this.tower.getTerminals()) {
             terminalsWithGatesWriter.write("\n" + terminal.encode());
         }
