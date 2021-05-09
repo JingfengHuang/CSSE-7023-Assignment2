@@ -70,7 +70,7 @@ public class ControlTower implements Tickable {
                         TakeoffQueue takeoffQueue,
                         Map<Aircraft,Integer> loadingAircraft) {
         this.ticksElapsed = ticksElapsed;
-        this.aircraft = new ArrayList<>();
+        this.aircraft = aircraft;
         this.terminals = new ArrayList<>();
         this.landingQueue = landingQueue;
         this.takeoffQueue = takeoffQueue;

@@ -495,7 +495,7 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
-        if (aircraftNumber > 0) {
+        if (aircraftNumber != 0) {
             //Read second line
             line = reader.readLine();
 
@@ -600,6 +600,10 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
+        if (line.lastIndexOf(":") == line.length() - 1 || line.indexOf(":") == 0) {
+            throw new MalformedSaveException();
+        }
+
         try {
             queueLength = Integer.parseInt(queueTypeAndNumber[1]);
         } catch (NumberFormatException nfe) {
@@ -625,6 +629,9 @@ public class ControlTowerInitialiser {
 
                 //Check if each callsign tick remaining pair is correct
                 if (callsignAndTickRemaining.length != 2) {
+                    throw new MalformedSaveException();
+                } else if (callsignTickRemainingPair.indexOf(":") == 0
+                        || callsignTickRemainingPair.lastIndexOf(":") == callsignTickRemainingPair.length() - 1) {
                     throw new MalformedSaveException();
                 }
 

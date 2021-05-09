@@ -13,6 +13,7 @@ import towersim.tasks.TaskList;
 import towersim.tasks.TaskType;
 import towersim.util.MalformedSaveException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -1626,5 +1627,1147 @@ public class ControlTowerInitialiserTest {
         TaskList taskList = ControlTowerInitialiser.readTaskList(line);
     }
 
-    //readQueue
+    @Test
+    public void readQueueNormalTest() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(0, landingQueue.getAircraftInOrder().size());
+        assertEquals(0, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test
+    public void readQueueNormalTest2() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:1", "LAN001");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(1, landingQueue.getAircraftInOrder().size());
+        assertEquals(0, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test
+    public void readQueueNormalTest3() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:2", "LAN001,LAN002");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(2, landingQueue.getAircraftInOrder().size());
+        assertEquals(0, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test
+    public void readQueueNormalTest4() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:3", "LAN001,LAN002,LAN003");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(3, landingQueue.getAircraftInOrder().size());
+        assertEquals(0, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test
+    public void readQueueNormalTest5() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:1", "TK001");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(0, landingQueue.getAircraftInOrder().size());
+        assertEquals(1, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test
+    public void readQueueNormalTest6() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:2", "TK001,TK002");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(0, landingQueue.getAircraftInOrder().size());
+        assertEquals(2, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test
+    public void readQueueNormalTest7() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:3","TK001,TK002,TK003");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(0, landingQueue.getAircraftInOrder().size());
+        assertEquals(3, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test
+    public void readQueueNormalTest8() {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:3","LAN001,LAN002,LAN003");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:3","TK001,TK002,TK003");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        try {
+            ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        try {
+            ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(3, landingQueue.getAircraftInOrder().size());
+        assertEquals(3, takeoffQueue.getAircraftInOrder().size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest9() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LaningQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest10() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "landingqueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "takeoffqueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest11() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LANDINGQUEUE:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TAKEOFFQUEUE:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest12() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandinQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest13() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TaeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest14() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), ":0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest15() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), ":0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest16() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest17() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest18() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "Landing:Queue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest19() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "Takeoff:Queue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest20() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest21() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest22() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest23() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest24() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:a");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest25() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:b");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest26() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0.3");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest27() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:4.9");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest28() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:1");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest29() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:39");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest30() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:-3", "LAN001");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest31() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:-1", "TK001");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest32() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:2", "TK001");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest33() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:2", "LAN002");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest34() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:2");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest35() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:1");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest36() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:2", "LAN001,LNA002");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest37() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:2", "TK01,TK002");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest38() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:2", "LAN001, LAN002");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:0");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readQueueNormalTest39() throws MalformedSaveException, IOException {
+        String landContent = String.join(System.lineSeparator(), "LandingQueue:0");
+        String takeoffContent = String.join(System.lineSeparator(), "TakeoffQueue:2", "TK001, TK002");
+        StringReader landQueueStringReader = new StringReader(landContent);
+        BufferedReader landReader = new BufferedReader(landQueueStringReader);
+        StringReader takeoffQueueStringReader = new StringReader(takeoffContent);
+        BufferedReader takeoffReader = new BufferedReader(takeoffQueueStringReader);
+
+        LandingQueue landingQueue = new LandingQueue();
+        TakeoffQueue takeoffQueue = new TakeoffQueue();
+
+        ControlTowerInitialiser.readQueue(landReader, allAircraft, landingQueue);
+        ControlTowerInitialiser.readQueue(takeoffReader, allAircraft, takeoffQueue);
+    }
+
+    @Test
+    public void readLoadingAircraftNormalTest() {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:0");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        try {
+            ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test
+    public void readLoadingAircraftNormalTest2() {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:1", "LOD001:1");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        try {
+            ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(1, loadingAircraft.size());
+    }
+
+    @Test
+    public void readLoadingAircraftNormalTest3() {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:1,LOD002:3");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        try {
+            ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(2, loadingAircraft.size());
+    }
+
+    @Test
+    public void readLoadingAircraftNormalTest4() {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:3", "LOD001:1,LOD002:2,LOD003:5");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        try {
+            ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+        } catch (MalformedSaveException | IOException e) {
+            fail();
+        }
+
+        assertEquals(3, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest1() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(3, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest2() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"", "LoadingAircraft:0");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest3() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft0");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest4() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"Loading:Aircraft:0");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest5() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft::0");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest6() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:0:");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest7() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),":LoadingAircraft:0");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest8() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:a");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest9() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:0.4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest10() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:_+{");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest11() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:1");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest12() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest13() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:0", "LOD001:2");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest14() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:1", "LOD001:2,LOD002:3");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest15() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:2");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest16() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:5", "LOD001:2,LOD002:3");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest17() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:1", ":LOD001:2");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest18() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:1", "LOD:001:2");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest19() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:1", "LOD001::2");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest20() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:1", "LOD001:2:");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest21() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD01:2,LOD002:4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest22() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:2,LOD00O2:4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest23() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "2:LOAD001,LOD002:4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest24() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:a,LOD002:4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest25() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:2,LOD002:b");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest26() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:2.2,LOD002:4.7");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest27() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:-2,LOD002:4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest28() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:2,LOD002:-4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest29() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:0,LOD002:4");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
+
+    @Test(expected = MalformedSaveException.class)
+    public void readLoadingAircraftFailTest30() throws MalformedSaveException, IOException {
+        String fileContent = String.join(System.lineSeparator(),"LoadingAircraft:2", "LOD001:2,LOD002:0");
+        StringReader stringReader = new StringReader(fileContent);
+        BufferedReader reader = new BufferedReader(stringReader);
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+
+        ControlTowerInitialiser.readLoadingAircraft(reader, allAircraft, loadingAircraft);
+
+        assertEquals(0, loadingAircraft.size());
+    }
 }
