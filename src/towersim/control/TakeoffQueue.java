@@ -78,9 +78,11 @@ public class TakeoffQueue extends AircraftQueue {
      * first aircraft that would be returned by calling removeAircraft(), and so on.
      *
      * Adding or removing elements from the returned list should not affect the original queue.
+     *
+     * @return list of all aircraft in queue, in queue order
      */
     public List<Aircraft> getAircraftInOrder() {
-        ArrayList<Aircraft> takeoffQueueCopy = new ArrayList<Aircraft> (this.takeoffQueue);
+        ArrayList<Aircraft> takeoffQueueCopy = new ArrayList<Aircraft>(this.takeoffQueue);
         ArrayList<Aircraft> orderedTakeoffQueue = new ArrayList<Aircraft>();
 
         if (!(this.takeoffQueue.isEmpty())) {

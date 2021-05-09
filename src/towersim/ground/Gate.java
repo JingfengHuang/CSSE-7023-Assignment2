@@ -157,7 +157,8 @@ public class Gate implements Encodable {
      *
      * The format of the string to return is: gateNumber:callsign
      * where gateNumber is the gate number of this gate
-     * callsign is the callsign of the aircraft parked at this gate, or empty if the gate is unoccupied
+     * callsign is the callsign of the aircraft parked at this gate,
+     * or empty if the gate is unoccupied
      *
      * @return encoded string representation of this gate
      */

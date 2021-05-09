@@ -193,7 +193,8 @@ public class ViewModel {
                 Aircraft selectedAircraft = getSelectedAircraft().get();
 
                 if (selectedAircraft != null
-                        && selectedAircraft.getTaskList().getCurrentTask().getType() == TaskType.LAND) {
+                        && selectedAircraft.getTaskList().getCurrentTask().getType()
+                        == TaskType.LAND) {
                     try {
                         Gate gate = tower.findUnoccupiedGate(selectedAircraft);
                         suitableGateText.setValue(gate.toString());

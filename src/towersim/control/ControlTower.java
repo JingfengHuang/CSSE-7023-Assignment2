@@ -68,7 +68,7 @@ public class ControlTower implements Tickable {
                         List<Aircraft> aircraft,
                         LandingQueue landingQueue,
                         TakeoffQueue takeoffQueue,
-                        Map<Aircraft,Integer> loadingAircraft) {
+                        Map<Aircraft, Integer> loadingAircraft) {
         this.ticksElapsed = ticksElapsed;
         this.aircraft = aircraft;
         this.terminals = new ArrayList<>();
@@ -241,7 +241,7 @@ public class ControlTower implements Tickable {
      */
     @Override
     public void tick() {
-        this.ticksElapsed ++;
+        this.ticksElapsed++;
 
         for (Aircraft aircraft : this.aircraft) {
             aircraft.tick();
@@ -301,7 +301,7 @@ public class ControlTower implements Tickable {
      *
      * @return loading aircraft map
      */
-    public Map<Aircraft,Integer> getLoadingAircraft() {
+    public Map<Aircraft, Integer> getLoadingAircraft() {
         return this.loadingAircraft;
     }
 
@@ -314,8 +314,9 @@ public class ControlTower implements Tickable {
      * If there is at least one aircraft in the landing queue,
      * then a suitable gate should be found for the aircraft at the front of the queue.
      *
-     * If there is no suitable gate, the aircraft should not be landed and should remain in the queue,
-     * and the method should return false and no further action should be taken.
+     * If there is no suitable gate, the aircraft should not be landed
+     * and should remain in the queue, and the method should return false
+     * and no further action should be taken.
      *
      * If there is a suitable gate, the aircraft should be removed from the queue,
      * and it should be parked at that gate. The aircraft's passengers or freight should be
@@ -452,16 +453,16 @@ public class ControlTower implements Tickable {
     @Override
     public String toString() {
 
-        return "ControlTower: " + this.getTerminals().size() +
-                " terminals, " +
-                this.aircraft.size() +
-                " total aircraft (" +
-                this.getLandingQueue().getAircraftInOrder().size() +
-                " LAND, " +
-                this.getTakeoffQueue().getAircraftInOrder().size() +
-                " TAKEOFF, " +
-                this.getLoadingAircraft().size() +
-                " LOAD)";
+        return "ControlTower: " + this.getTerminals().size()
+                + " terminals, "
+                + this.aircraft.size()
+                + " total aircraft ("
+                + this.getLandingQueue().getAircraftInOrder().size()
+                + " LAND, "
+                + this.getTakeoffQueue().getAircraftInOrder().size()
+                + " TAKEOFF, "
+                + this.getLoadingAircraft().size()
+                + " LOAD)";
     }
 
 }

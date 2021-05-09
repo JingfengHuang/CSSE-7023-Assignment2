@@ -33,28 +33,36 @@ public class TaskList {
 
         for (Task task : this.tasks) {
             //If task is not the last element of the task list, then validate next task
-            if (this.tasks.indexOf(task) != (this.tasks.size() -1)) {
+            if (this.tasks.indexOf(task) != (this.tasks.size() - 1)) {
                 if (task.getType().name().equals("TAKEOFF")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("AWAY"))) {
+                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("AWAY"))) {
                         throw new IllegalArgumentException();
                     }
                 } else if (task.getType().name().equals("AWAY")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("AWAY")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("LAND"))) {
+                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("AWAY")
+                            || this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("LAND"))) {
                         throw new IllegalArgumentException();
                     }
                 } else if (task.getType().name().equals("LAND")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("LOAD"))) {
+                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("WAIT")
+                            || this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("LOAD"))) {
                         throw new IllegalArgumentException();
                     }
                 } else if (task.getType().name().equals("WAIT")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("LOAD"))) {
+                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("WAIT")
+                            || this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("LOAD"))) {
                         throw new IllegalArgumentException();
                     }
                 } else if (task.getType().name().equals("LOAD")) {
-                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("TAKEOFF"))) {
+                    if (!(this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("TAKEOFF"))) {
                         throw new IllegalArgumentException();
                     }
                 }
@@ -66,17 +74,20 @@ public class TaskList {
                     }
                 } else if (task.getType().name().equals("AWAY")) {
                     if (!(this.tasks.get(0).getType().name().equals("AWAY")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("LAND"))) {
+                            || this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("LAND"))) {
                         throw new IllegalArgumentException();
                     }
                 } else if (task.getType().name().equals("LAND")) {
                     if (!(this.tasks.get(0).getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("LOAD"))) {
+                            || this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("LOAD"))) {
                         throw new IllegalArgumentException();
                     }
                 } else if (task.getType().name().equals("WAIT")) {
                     if (!(this.tasks.get(0).getType().name().equals("WAIT")
-                            || this.tasks.get(this.tasks.indexOf(task) + 1).getType().name().equals("LOAD"))) {
+                            || this.tasks.get(this.tasks.indexOf(task) + 1)
+                            .getType().name().equals("LOAD"))) {
                         throw new IllegalArgumentException();
                     }
                 } else if (task.getType().name().equals("LOAD")) {
@@ -170,7 +181,7 @@ public class TaskList {
         String spacer = ",";
         StringBuilder sb = new StringBuilder();
         
-        for(Task task : this.tasks) {
+        for (Task task : this.tasks) {
             sb.append(task.encode());
             sb.append(spacer);
         }

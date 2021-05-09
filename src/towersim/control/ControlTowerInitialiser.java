@@ -31,7 +31,7 @@ public class ControlTowerInitialiser {
      * tickWriter row of in the table shown in ViewModel.saveAs().
      *
      * The contents read from the reader are invalid if any of the following conditions are true:
-     * The number of ticks elapsed is not an integer (i.e. cannot be parsed by Long.parseLong(String)).
+     * The number of ticks elapsed is not an integer.
      * Or: The number of ticks elapsed is less than zero.
      *
      * @param reader - reader from which to load the number of ticks elapsed
@@ -82,7 +82,8 @@ public class ControlTowerInitialiser {
      * is invalid according to the rules above
      * @throws IOException - if an IOException is encountered when reading from the reader
      */
-    public static List<Aircraft> loadAircraft(Reader reader) throws IOException, MalformedSaveException {
+    public static List<Aircraft> loadAircraft(Reader reader)
+            throws IOException, MalformedSaveException {
         List<Aircraft> aircraftList = new ArrayList<Aircraft>();
         BufferedReader bufferedReader = new BufferedReader(reader);
         int aircraftCounter = 0;
@@ -140,7 +141,8 @@ public class ControlTowerInitialiser {
      * More/fewer colons (:) are detected in the string than expected.
      * The aircraft's AircraftCharacteristics is not valid.
      * The aircraft's fuel amount is not a double
-     * The aircraft's fuel amount is less than zero or greater than the aircraft's maximum fuel capacity.
+     * The aircraft's fuel amount is less than zero or greater than
+     * the aircraft's maximum fuel capacity.
      * The amount of cargo (freight/passengers) onboard the aircraft is not an integer
      * The amount of cargo (freight/passengers) onboard the aircraft is less than
      * zero or greater than the aircraft's maximum freight/passenger capacity.
@@ -162,16 +164,12 @@ public class ControlTowerInitialiser {
 
         String callsign = decodedAircraft[0];
         String model = decodedAircraft[1];
-        String tasks = decodedAircraft[2];
+
         String fuelNumber = decodedAircraft[3];
-        String emergency = decodedAircraft[4];
         String cargoNumber = decodedAircraft[5];
 
-
         AircraftCharacteristics aircraftCharacteristics = null;
-        TaskList taskList;
         double fuelAmount;
-        boolean emergencyStatus;
         int cargoAmount;
 
         //Check if AircraftCharacteristics is valid or not
@@ -194,6 +192,8 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
+        String tasks = decodedAircraft[2];
+        TaskList taskList;
         taskList = readTaskList(tasks);
 
         //Check if the cargo amount is valid or not
@@ -216,10 +216,14 @@ public class ControlTowerInitialiser {
 
         //Create aircraft based on their characteristics
         if (aircraftCharacteristics.passengerCapacity <= 0) {
-            aircraft = new FreightAircraft(callsign, aircraftCharacteristics, taskList, fuelAmount, cargoAmount);
+            aircraft = new FreightAircraft(callsign, aircraftCharacteristics,
+                    taskList, fuelAmount, cargoAmount);
         } else {
-            aircraft = new PassengerAircraft(callsign, aircraftCharacteristics, taskList, fuelAmount, cargoAmount);
+            aircraft = new PassengerAircraft(callsign, aircraftCharacteristics,
+                    taskList, fuelAmount, cargoAmount);
         }
+
+        String emergency = decodedAircraft[4];
 
         //Declare emergency if the aircraft is in emergency
         if (emergency.equals("true")) {
@@ -256,7 +260,7 @@ public class ControlTowerInitialiser {
      */
     public static void loadQueues(Reader reader, List<Aircraft> aircraft,
                                   TakeoffQueue takeoffQueue, LandingQueue landingQueue,
-                                  Map<Aircraft,Integer> loadingAircraft)
+                                  Map<Aircraft, Integer> loadingAircraft)
             throws MalformedSaveException, IOException {
         BufferedReader bufferedReader = new BufferedReader(reader);
 
@@ -338,7 +342,8 @@ public class ControlTowerInitialiser {
 
         TakeoffQueue takeoffQueue = new TakeoffQueue();
         LandingQueue landingQueue = new LandingQueue();
-        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(Comparator.comparing(Aircraft::getCallsign));
+        Map<Aircraft, Integer> loadingAircraft = new TreeMap<>(
+                Comparator.comparing(Aircraft::getCallsign));
 
         loadQueues(queues, allAircraft, takeoffQueue, landingQueue, loadingAircraft);
 
@@ -558,7 +563,8 @@ public class ControlTowerInitialiser {
      *
      * 3. The number of aircraft specified on the first line is not an integer
      *
-     * 4. The number of aircraft is greater than zero and the second line read from the reader is null.
+     * 4. The number of aircraft is greater than zero and the
+     * second line read from the reader is null.
      *
      * 5. The number of aircraft specified on the first line is not equal to
      * the number of callsigns read on the second line.
@@ -631,7 +637,8 @@ public class ControlTowerInitialiser {
                 if (callsignAndTickRemaining.length != 2) {
                     throw new MalformedSaveException();
                 } else if (callsignTickRemainingPair.indexOf(":") == 0
-                        || callsignTickRemainingPair.lastIndexOf(":") == callsignTickRemainingPair.length() - 1) {
+                        || callsignTickRemainingPair.lastIndexOf(":")
+                        == callsignTickRemainingPair.length() - 1) {
                     throw new MalformedSaveException();
                 }
 
@@ -798,7 +805,6 @@ public class ControlTowerInitialiser {
         String[] encodedGate = line.split(":");
         int gateNumber;
         String callsign = null;
-        Gate gate;
         Aircraft aircraftAtGate = null;
 
         if (encodedGate.length != 2) {
@@ -830,6 +836,8 @@ public class ControlTowerInitialiser {
         if (callsign == null) {
             throw new MalformedSaveException();
         }
+
+        Gate gate;
 
         gate = new Gate(gateNumber);
         if (!callsign.equals("empty")) {

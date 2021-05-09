@@ -211,7 +211,8 @@ public abstract class Terminal implements EmergencyState, OccupancyLevel, Encoda
 
         if (this instanceof AirplaneTerminal && objTerminal instanceof AirplaneTerminal) {
             return true;
-        } else if (this instanceof HelicopterTerminal && objTerminal instanceof HelicopterTerminal) {
+        } else if (this instanceof HelicopterTerminal
+                && objTerminal instanceof HelicopterTerminal) {
             return true;
         } else {
             return false;

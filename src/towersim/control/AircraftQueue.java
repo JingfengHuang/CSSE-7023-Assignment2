@@ -66,7 +66,8 @@ public abstract class AircraftQueue implements Encodable {
      * QueueType [callsign1, callsign2, ..., callsignN]
      *
      * where QueueType is the concrete queue class (i.e. LandingQueue or TakeoffQueue)
-     * and callsign1 through callsignN are the callsigns of all aircraft in the queue, in queue order
+     * and callsign1 through callsignN are the callsigns of
+     * all aircraft in the queue, in queue order
      *
      * @return string representation of this queue
      */
@@ -112,7 +113,8 @@ public abstract class AircraftQueue implements Encodable {
             encodeContent.append("\n");
             for (int i = 0; i < this.getAircraftInOrder().size(); i++) {
                 if (i != this.getAircraftInOrder().size() - 1) {
-                    encodeContent.append(this.getAircraftInOrder().get(i).getCallsign()).append(",");
+                    encodeContent.append(this.getAircraftInOrder().get(i)
+                            .getCallsign()).append(",");
                 } else {
                     encodeContent.append(this.getAircraftInOrder().get(i).getCallsign());
                 }
