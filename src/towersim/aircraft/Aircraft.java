@@ -322,7 +322,7 @@ public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencySta
         if (this.hasEmergency()) {
             encode += "true";
         } else {
-            encode += "false"
+            encode += "false";
         }
 
         return encode;
