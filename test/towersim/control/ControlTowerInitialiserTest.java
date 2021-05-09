@@ -1517,6 +1517,12 @@ public class ControlTowerInitialiserTest {
     }
 
     @Test(expected = MalformedSaveException.class)
+    public void readTaskListFailTest111() throws MalformedSaveException {
+        String line = "WAIT,LOAD@1@2,TAKEOFF,AWAY,AWAY,LAND";
+        TaskList taskList = ControlTowerInitialiser.readTaskList(line);
+    }
+
+    @Test(expected = MalformedSaveException.class)
     public void readTaskListFailTest12() throws MalformedSaveException {
         String line = "WAIT,LOAD@75,TAKE@OFF,AWAY,AWAY,LAND";
         TaskList taskList = ControlTowerInitialiser.readTaskList(line);
