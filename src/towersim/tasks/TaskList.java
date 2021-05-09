@@ -75,19 +75,19 @@ public class TaskList {
                         }
                     } else if (task.getType().name().equals("AWAY")) {
                         if (!(this.tasks.get(0).getType().name().equals("AWAY")
-                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                || this.tasks.get(0)
                                 .getType().name().equals("LAND"))) {
                             throw new IllegalArgumentException();
                         }
                     } else if (task.getType().name().equals("LAND")) {
                         if (!(this.tasks.get(0).getType().name().equals("WAIT")
-                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                || this.tasks.get(0)
                                 .getType().name().equals("LOAD"))) {
                             throw new IllegalArgumentException();
                         }
                     } else if (task.getType().name().equals("WAIT")) {
                         if (!(this.tasks.get(0).getType().name().equals("WAIT")
-                                || this.tasks.get(this.tasks.indexOf(task) + 1)
+                                || this.tasks.get(0)
                                 .getType().name().equals("LOAD"))) {
                             throw new IllegalArgumentException();
                         }
