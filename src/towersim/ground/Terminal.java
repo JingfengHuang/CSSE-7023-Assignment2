@@ -196,14 +196,17 @@ public abstract class Terminal implements EmergencyState, OccupancyLevel, Encoda
      */
     @Override
     public boolean equals(Object obj) {
+        //Terminal should be equal to itself
         if (obj == this) {
             return true;
         }
 
+        //If object is not terminal, then they are not equal
         if (!(obj instanceof Terminal)) {
             return false;
         }
 
+        //Compare the terminal number and terminal type
         Terminal objTerminal = (Terminal) obj;
         if (!(this.getTerminalNumber() == objTerminal.getTerminalNumber())) {
             return false;

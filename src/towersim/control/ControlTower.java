@@ -245,6 +245,7 @@ public class ControlTower implements Tickable {
 
         for (Aircraft aircraft : this.aircraft) {
             aircraft.tick();
+            //If current task is AWAY or WAIT, then move to next task
             if (aircraft.getTaskList().getCurrentTask().getType() == TaskType.AWAY
                     || aircraft.getTaskList().getCurrentTask().getType() == TaskType.WAIT) {
                 aircraft.getTaskList().moveToNextTask();
@@ -253,13 +254,14 @@ public class ControlTower implements Tickable {
 
         this.loadAircraft();
 
+        //Every even tick try to land aircraft
         if (this.ticksElapsed % 2 == 0) {
             if (this.tryLandAircraft()) {
                 //ignore
-            } else {
+            } else { //If unable to land aircraft, then try to take off
                 this.tryTakeOffAircraft();
             }
-        } else {
+        } else { //Every odd tick try to take off aircraft
             this.tryTakeOffAircraft();
         }
 
@@ -382,9 +384,11 @@ public class ControlTower implements Tickable {
             this.loadingAircraft.put(entry.getKey(), entry.getValue() - 1);
 
             if (entry.getValue() <= 0) {
+                //If load remaining is less than 1, then remove it from load map
                 Aircraft finishedLoadingAircraft = entry.getKey();
                 itr.remove();
 
+                //Find the gate aircraft parked, and remove it if gate exist
                 Gate initialGate = this.findGateOfAircraft(finishedLoadingAircraft);
                 if (initialGate != null) {
                     initialGate.aircraftLeaves();

@@ -261,14 +261,17 @@ public abstract class Aircraft implements OccupancyLevel, Tickable, EmergencySta
      */
     @Override
     public boolean equals(Object obj) {
+        //Every aircraft would be equal to itself
         if (obj == this) {
             return true;
         }
 
+        //If the object is not Aircraft, then they can't be equal
         if (!(obj instanceof Aircraft)) {
             return false;
         }
 
+        //Compare callsign and characteristics
         Aircraft objAircraft = (Aircraft) obj;
         return (this.callsign.equals(objAircraft.getCallsign()))
                 && (this.characteristics.equals(objAircraft.getCharacteristics()));

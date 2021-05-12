@@ -119,14 +119,17 @@ public class Gate implements Encodable {
      */
     @Override
     public boolean equals(Object obj) {
+        //Gate should be equal to itself
         if (obj == this) {
             return true;
         }
 
+        //If object is not a gate, then it's not equal
         if (!(obj instanceof Gate)) {
             return false;
         }
 
+        //Compare gate number
         Gate objGate = (Gate) obj;
         return this.getGateNumber() == objGate.getGateNumber();
     }

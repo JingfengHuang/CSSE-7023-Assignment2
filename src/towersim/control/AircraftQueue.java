@@ -77,10 +77,12 @@ public abstract class AircraftQueue implements Encodable {
 
         if (this.getAircraftInOrder().size() != 0) {
             for (int i = 0; i < this.getAircraftInOrder().size(); i++) {
+                //If loop doesn't reach the last aircraft
                 if (i != this.getAircraftInOrder().size() - 1) {
                     aircraftQueue.append(this.getAircraftInOrder().get(i).getCallsign());
                     aircraftQueue.append(", ");
                 } else {
+                    //If loop reaches the last aircraft
                     aircraftQueue.append(this.getAircraftInOrder().get(i).getCallsign());
                 }
             }
@@ -112,10 +114,12 @@ public abstract class AircraftQueue implements Encodable {
         if (this.getAircraftInOrder().size() != 0) {
             encodeContent.append("\n");
             for (int i = 0; i < this.getAircraftInOrder().size(); i++) {
+                //If loop doesn't reach the last aircraft
                 if (i != this.getAircraftInOrder().size() - 1) {
                     encodeContent.append(this.getAircraftInOrder().get(i)
                             .getCallsign()).append(",");
                 } else {
+                    //If loop reaches the last aircraft
                     encodeContent.append(this.getAircraftInOrder().get(i).getCallsign());
                 }
             }

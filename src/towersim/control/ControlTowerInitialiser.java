@@ -297,14 +297,17 @@ public class ControlTowerInitialiser {
         int terminalNumber;
 
         BufferedReader bufferedReader = new BufferedReader(reader);
+        //Read first line
         String line = bufferedReader.readLine();
 
+        //Check if first line is valid
         try {
             terminalNumber = Integer.parseInt(line);
         } catch (NumberFormatException nfe) {
             throw new MalformedSaveException();
         }
 
+        //Check if the following terminal information valid
         for (int i = 0; i < terminalNumber; i++) {
             line = bufferedReader.readLine();
             if (line == null) {
@@ -313,6 +316,7 @@ public class ControlTowerInitialiser {
             terminals.add(readTerminal(line, bufferedReader, aircraft));
         }
 
+        //Check if file doesn't end while it should
         line = bufferedReader.readLine();
         if (line != null) {
             throw new MalformedSaveException();
@@ -385,12 +389,13 @@ public class ControlTowerInitialiser {
         String[] splitTasks = taskListPart.split(",");
         int loadPercentage;
 
+        //Check if task name is valid
         for (String taskName : splitTasks) {
             if (!(taskName.equals("WAIT") || taskName.startsWith("LOAD@")
                     || taskName.equals("TAKEOFF") || taskName.equals("AWAY")
                     || taskName.equals("LAND"))) {
                 throw new MalformedSaveException();
-            } else {
+            } else { // Check task is in correct format
                 if (taskName.startsWith("LOAD@")) {
                     String[] splitLoadTask = taskName.split("@");
                     if (splitLoadTask.length != 2) {
@@ -421,6 +426,7 @@ public class ControlTowerInitialiser {
             }
         }
 
+        //Check the number of "@"
         String[] splitByAt = taskListPart.split("@");
         if (splitByAt.length > 2) {
             throw new MalformedSaveException();
@@ -720,16 +726,24 @@ public class ControlTowerInitialiser {
 
         Terminal terminal = null;
 
+        //Check the number of ":"
         if (terminalInfo.length != 4) {
             throw new MalformedSaveException();
         }
 
+        //Check if there is ":" at the end of line
+        if (line.lastIndexOf(":") == line.length() - 1) {
+            throw new MalformedSaveException();
+        }
+
+        //Check terminal type name
         if (!terminalInfo[0].equals("HelicopterTerminal")) {
             if (!terminalInfo[0].equals("AirplaneTerminal")) {
                 throw new MalformedSaveException();
             }
         }
 
+        //Check if terminal number is valid
         try {
             terminalNumber = Integer.parseInt(terminalInfo[1]);
         } catch (NumberFormatException nfe) {
@@ -740,12 +754,14 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
+        //Create new terminal
         if (terminalInfo[0].equals("HelicopterTerminal")) {
             terminal = new HelicopterTerminal(terminalNumber);
         } else if (terminalInfo[0].equals("AirplaneTerminal")) {
             terminal = new AirplaneTerminal(terminalNumber);
         }
 
+        //Check the number of gates in terminal
         try {
             numberOfGates = Integer.parseInt(terminalInfo[3]);
         } catch (NumberFormatException nfe) {
@@ -762,7 +778,7 @@ public class ControlTowerInitialiser {
                 if (nextLine == null) {
                     throw new MalformedSaveException();
                 } else {
-                    try {
+                    try { //Add gate to terminal
                         terminal.addGate(readGate(nextLine, aircraft));
                     } catch (NoSpaceException nse) {
                         //Ignore. New terminal has no gate, and gate number has been checked
@@ -807,10 +823,17 @@ public class ControlTowerInitialiser {
         String callsign = null;
         Aircraft aircraftAtGate = null;
 
+        //Check the number of ":"
         if (encodedGate.length != 2) {
             throw new MalformedSaveException();
         }
 
+        //Check if ":" exists at the end of line
+        if (line.lastIndexOf(":") == line.length() - 1) {
+            throw new MalformedSaveException();
+        }
+
+        //Check if gate number is valid
         try {
             gateNumber = Integer.parseInt(encodedGate[0]);
         } catch (NumberFormatException nfe) {
@@ -821,6 +844,7 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
+        //Check if there is aircraft at gate
         if (!encodedGate[1].equals("empty")) {
             for (Aircraft craft : aircraft) {
                 if (craft.getCallsign().equals(encodedGate[1])) {
@@ -837,11 +861,12 @@ public class ControlTowerInitialiser {
             throw new MalformedSaveException();
         }
 
+        //Create new gate
         Gate gate;
 
         gate = new Gate(gateNumber);
         if (!callsign.equals("empty")) {
-            try {
+            try { //Try park aircraft at that gate if there is aircraft
                 gate.parkAircraft(aircraftAtGate);
             } catch (NoSpaceException nse) {
                 //Ignore. New Gate object is always unoccupied
